@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Материалы{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Учебные материалы</h1>
+    {% if current_user.role_name in ['admin', 'teacher'] %}
+        <a class="btn btn-primary" href="{{ url_for('materials_create') }}">Добавить материал</a>
+    {% endif %}
+</div>
+
+<form class="row g-3 mb-3" method="get">
+    <div class="col-md-4">
+        <select name="category_id" class="form-select">
+            <option value="">Все категории</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if category_filter == category.id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-primary" type="submit">Фильтровать</button>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Автор</th>
+            <th>Дата</th>
+            <th>Файлы</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for material in materials %}
+            <tr>
+                <td>{{ material.id }}</td>
+                <td>{{ material.title }}</td>
+                <td>{{ material.category.name }}</td>
+                <td>{{ material.author.display_name }}</td>
+                <td>{{ material.created_at|msk_datetime('%d.%m.%Y') }}</td>
+                <td>{{ material.files|length }}</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="{{ url_for('materials_detail', material_id=material.id) }}">Открыть</a>
+                    {% if current_user.role_name == 'admin' or material.author_id == current_user.id %}
+                        <a class="btn btn-sm btn-warning" href="{{ url_for('materials_edit', material_id=material.id) }}">Изменить</a>
+                        <form action="{{ url_for('materials_delete', material_id=material.id) }}" method="post" class="d-inline">
+                            <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

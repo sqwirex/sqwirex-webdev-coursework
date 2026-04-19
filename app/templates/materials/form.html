@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Материал{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{% if material %}Редактирование материала{% else %}Создание материала{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data" class="card card-body mb-3">
+    <div class="mb-3">
+        <label class="form-label">Название</label>
+        <input type="text" name="title" class="form-control" value="{{ material.title if material else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Описание</label>
+        <textarea name="description" class="form-control" rows="5">{{ material.description if material else '' }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Категория</label>
+        <select name="category_id" class="form-select" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if material and material.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Добавить файлы</label>
+        <input type="file" name="files" class="form-control" multiple>
+        <div class="form-text">Поддерживаются: pdf, doc, docx, txt, ppt, pptx, xls, xlsx, png, jpg, jpeg.</div>
+    </div>
+    <div>
+        <button class="btn btn-success" type="submit">Сохранить</button>
+        <a class="btn btn-secondary" href="{{ url_for('materials_list') }}">Назад</a>
+    </div>
+</form>
+
+{% if material and material.files %}
+<div class="card mb-4">
+    <div class="card-header"><strong>Уже загруженные файлы</strong></div>
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for file in material.files %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ file.original_name }}</span>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('files_download', file_id=file.id) }}">Скачать</a>
+                        {% if current_user.role_name == 'admin' or material.author_id == current_user.id %}
+                        <form action="{{ url_for('files_delete', file_id=file.id) }}" method="post" class="d-inline mb-0">
+                            <input type="hidden" name="next" value="edit">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

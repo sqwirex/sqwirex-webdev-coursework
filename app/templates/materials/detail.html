@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ material.title }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">{{ material.title }}</h1>
+    <a class="btn btn-secondary" href="{{ url_for('materials_list') }}">Назад к списку</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Категория:</strong> {{ material.category.name }}</p>
+        <p><strong>Автор:</strong> {{ material.author.display_name }}</p>
+        <p><strong>Дата создания:</strong> {{ material.created_at|msk_datetime }}</p>
+        <p><strong>Описание:</strong></p>
+        <p>{{ material.description or 'Описание не указано.' }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><strong>Файлы</strong></div>
+    <div class="card-body">
+        {% if material.files %}
+            <ul class="list-group">
+                {% for file in material.files %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ file.original_name }}</span>
+                        <div>
+                            <a class="btn btn-sm btn-primary" href="{{ url_for('files_download', file_id=file.id) }}">Скачать</a>
+                            {% if current_user.role_name == 'admin' or material.author_id == current_user.id %}
+                                <form action="{{ url_for('files_delete', file_id=file.id) }}" method="post" class="d-inline">
+                                    <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="mb-0">Файлы отсутствуют.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

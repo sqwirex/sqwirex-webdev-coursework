@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Статистика по материалам</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card card-body">
+            <h2 class="h5">Общее количество материалов</h2>
+            <p class="display-6 mb-0">{{ total_materials }}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-body">
+            <h2 class="h5">Общее количество файлов</h2>
+            <p class="display-6 mb-0">{{ total_files }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">Материалы по категориям</div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for name, count in materials_by_category %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ name }}</span><span>{{ count }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">Материалы по авторам</div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for name, count in materials_by_author %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ name }}</span><span>{{ count }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">Пользователи по ролям</div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for name, count in role_counts %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ name }}</span><span>{{ count }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

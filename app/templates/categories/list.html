@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Категории{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Категории</h1>
+    {% if current_user.role_name == 'admin' %}
+        <a class="btn btn-primary" href="{{ url_for('categories_create') }}">Добавить категорию</a>
+    {% endif %}
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Количество материалов</th>
+            {% if current_user.role_name == 'admin' %}<th>Действия</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td>{{ category.materials|length }}</td>
+                {% if current_user.role_name == 'admin' %}
+                <td>
+                    <a class="btn btn-sm btn-warning" href="{{ url_for('categories_edit', category_id=category.id) }}">Редактировать</a>
+                    <form action="{{ url_for('categories_delete', category_id=category.id) }}" method="post" class="d-inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

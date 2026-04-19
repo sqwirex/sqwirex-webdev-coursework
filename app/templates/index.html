@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3">
+    <h1 class="display-6">Электронный архив учебных материалов</h1>
+    <p class="lead mb-0">Приложение для хранения, систематизации и выдачи учебных материалов с ролевым доступом.</p>
+</div>
+
+{% if current_user.is_authenticated %}
+    <h2 class="h4 mb-3">Последние материалы</h2>
+    {% if materials %}
+        <div class="list-group">
+            {% for material in materials %}
+                <a href="{{ url_for('materials_detail', material_id=material.id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ material.title }}</h5>
+                        <small>{{ material.created_at|msk_datetime('%d.%m.%Y') }}</small>
+                    </div>
+                    <p class="mb-1">Категория: {{ material.category.name }}</p>
+                    <small>Автор: {{ material.author.display_name }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Материалы пока отсутствуют.</p>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">Для работы с приложением войдите в систему. Тестовый администратор: <strong>admin</strong> / <strong>admin123</strong>.</div>
+{% endif %}
+{% endblock %}
