@@ -1,0 +1,52 @@
+\documentclass[14pt, a4paper]{extarticle}
+\usepackage{mospolytech_coursework}
+\usepackage{xurl}
+\usepackage{tocloft}
+\sloppy
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\cftsecfont}{\fontsize{12.5}{14}\selectfont}
+\renewcommand{\cftsubsecfont}{\fontsize{12.5}{14}\selectfont}
+\renewcommand{\cftsecpagefont}{\fontsize{12.5}{14}\selectfont}
+\renewcommand{\cftsubsecpagefont}{\fontsize{12.5}{14}\selectfont}
+\setlength{\cftbeforesecskip}{0pt}
+\lstset{basicstyle=\small\rmfamily,columns=fullflexible,breaklines=true,keepspaces=true}
+
+% Определение данных
+\newcommand{\theme}{%
+    Разработка веб-приложения для хранения, систематизации и выдачи учебных материалов%
+}
+\newcommand{\subject}{Разработка веб-приложений}
+\newcommand{\student}{Николаев Алексей Владимирович}
+\newcommand{\group}{241-3211}
+\newcommand{\teacher}{Кружалов Алексей Сергеевич}
+
+\begin{document}
+
+% Титульный лист
+\include{title}
+
+% Задание
+\includepdf[pages=-]{task.pdf}
+
+% Содержание
+\tableofcontents
+
+% Введение
+\include{intro}
+
+% Основная часть
+\include{chapter1}
+\include{chapter2}
+\include{chapter3}
+
+% Заключение
+\include{conclusion}
+
+% Список литературы
+\include{refs}
+
+% Приложение
+\include{appendix}
+
+\end{document}
